@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GrimoireHub - Platform Baca Novel</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-dark: #243E36;
+            --primary-light: #F1F7ED;
+            --accent-green: #7CA982;
+            --accent-light: #E0EEC6;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --shadow: rgba(36, 62, 54, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-light) 0%, var(--accent-light) 100%);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding-bottom: 80px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--primary-dark);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 20px var(--shadow);
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+            color: var(--accent-green);
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 500px;
+            position: relative;
+        }
+
+        .search-bar {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            padding-right: 3rem;
+            border: none;
+            border-radius: 25px;
+            background: var(--primary-light);
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px var(--shadow);
+        }
+
+        .search-bar:focus {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px var(--shadow);
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 0.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--accent-green);
+            border: none;
+            border-radius: 50%;
+            width: 2.5rem;
+            height: 2.5rem;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: var(--primary-dark);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .notification-btn {
+            background: none;
+            border: none;
+            color: var(--text-light);
+            font-size: 1.2rem;
+            cursor: pointer;
+            position: relative;
+            padding: 0.5rem;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .notification-btn:hover {
+            background: var(--accent-green);
+            transform: scale(1.1);
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: #e74c3c;
+            color: white;
+            border-radius: 50%;
+            width: 1rem;
+            height: 1rem;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--accent-green) 100%);
+            color: var(--text-light);
+            padding: 3rem 2rem;
+            border-radius: 20px;
+            margin-bottom: 3rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="books" patternUnits="userSpaceOnUse" width="20" height="20"><rect width="20" height="20" fill="none"/><rect x="2" y="4" width="3" height="12" fill="rgba(255,255,255,0.1)"/><rect x="6" y="2" width="3" height="14" fill="rgba(255,255,255,0.1)"/><rect x="10" y="6" width="3" height="10" fill="rgba(255,255,255,0.1)"/><rect x="14" y="3" width="3" height="13" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23books)"/></svg>') repeat;
+            opacity: 0.3;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--accent-light);
+        }
+
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .see-all {
+            color: var(--accent-green);
+            text-decoration: none;
+            font-weight: 500;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .see-all:hover {
+            background: var(--accent-green);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        /* Novel Grid */
+        .novel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .novel-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .novel-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px var(--shadow);
+        }
+
+        .novel-cover {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, var(--accent-green), var(--primary-dark));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .novel-cover::before {
+            content: '📖';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            opacity: 0.7;
+        }
+
+        .novel-info {
+            padding: 1rem;
+        }
+
+        .novel-title {
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary-dark);
+            line-height: 1.3;
+        }
+
+        .novel-author {
+            color: var(--accent-green);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .novel-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.7rem;
+            color: #666;
+        }
+
+        .novel-rating {
+            display: flex;
+            align-items: center;
+            gap: 0.2rem;
+        }
+
+        .rating-star {
+            color: #f39c12;
+        }
+
+        /* Genre Tags */
+        .genre-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .genre-tag {
+            background: var(--accent-light);
+            color: var(--primary-dark);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .genre-tag:hover,
+        .genre-tag.active {
+            background: var(--accent-green);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px var(--shadow);
+        }
+
+        /* Mobile Bottom Navigation */
+        .mobile-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--primary-dark);
+            padding: 0.5rem 0;
+            z-index: 100;
+            box-shadow: 0 -2px 20px var(--shadow);
+        }
+
+        .mobile-nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.2rem;
+            color: var(--text-light);
+            text-decoration: none;
+            padding: 0.5rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-size: 0.8rem;
+        }
+
+        .nav-item.active {
+            background: var(--accent-green);
+            color: white;
+        }
+
+        .nav-item:hover {
+            background: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .nav-item i {
+            font-size: 1.2rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                padding: 0 0.5rem;
+            }
+
+            .logo {
+                font-size: 1.2rem;
+            }
+
+            .user-menu {
+                gap: 0.5rem;
+            }
+
+            .main-content {
+                padding: 1rem 0.5rem;
+            }
+
+            .hero {
+                padding: 2rem 1rem;
+                margin-bottom: 2rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .hero p {
+                font-size: 1rem;
+            }
+
+            .novel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+                gap: 1rem;
+            }
+
+            .novel-cover {
+                height: 180px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .genre-tags {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .search-container {
+                max-width: 200px;
+            }
+
+            .search-bar {
+                font-size: 0.9rem;
+                padding: 0.7rem;
+            }
+
+            .novel-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+
+            .novel-cover {
+                height: 160px;
+            }
+
+            .novel-cover::before {
+                font-size: 2rem;
+            }
+        }
+
+        /* Loading Animation */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(124, 169, 130, 0.3);
+            border-radius: 50%;
+            border-top-color: var(--accent-green);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Scroll to top button */
+        .scroll-top {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background: var(--accent-green);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px var(--shadow);
+        }
+
+        .scroll-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .scroll-top:hover {
+            background: var(--primary-dark);
+            transform: translateY(-3px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-container">
+            <a href="#" class="logo">
+                <i class="fas fa-book-open"></i>
+                GrimoireHub
+            </a>
+            
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Cari novel, author, genre...">
+                <button class="search-btn">
+                    <i class="fas fa-search"></i>
+                </button>
+            </div>
+            
+            <div class="user-menu">
+                <button class="notification-btn">
+                    <i class="fas fa-bell"></i>
+                    <span class="notification-badge">3</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Selamat Datang di GrimoireHub</h1>
+                <p>Temukan ribuan novel menarik dari berbagai genre. Baca gratis dan nikmati pengalaman membaca yang tak terlupakan.</p>
+            </div>
+        </section>
+
+        <!-- Genre Tags -->
+        <section class="genre-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-tags"></i>
+                    Genre Populer
+                </h2>
+            </div>
+            <div class="genre-tags">
+                <span class="genre-tag active">Semua</span>
+                <span class="genre-tag">Romance</span>
+                <span class="genre-tag">Fantasy</span>
+                <span class="genre-tag">Action</span>
+                <span class="genre-tag">Drama</span>
+                <span class="genre-tag">Comedy</span>
+                <span class="genre-tag">Horror</span>
+                <span class="genre-tag">Sci-Fi</span>
+                <span class="genre-tag">Mystery</span>
+            </div>
+        </section>
+
+        <!-- Popular Novels -->
+        <section class="popular-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-fire"></i>
+                    Novel Populer
+                </h2>
+                <a href="#" class="see-all">Lihat Semua</a>
+            </div>
+            <div class="novel-grid" id="popularNovels">
+                <!-- Novel cards will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- New Releases -->
+        <section class="new-releases">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i>
+                    Rilis Terbaru
+                </h2>
+                <a href="#" class="see-all">Lihat Semua</a>
+            </div>
+            <div class="novel-grid" id="newReleases">
+                <!-- Novel cards will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Trending -->
+        <section class="trending-section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-trending-up"></i>
+                    Sedang Trending
+                </h2>
+                <a href="#" class="see-all">Lihat Semua</a>
+            </div>
+            <div class="novel-grid" id="trendingNovels">
+                <!-- Novel cards will be generated by JavaScript -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+        <div class="mobile-nav-container">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Home</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-compass"></i>
+                <span>Explore</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-bookmark"></i>
+                <span>Library</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-heart"></i>
+                <span>Favorit</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user"></i>
+                <span>Profil</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Scroll to Top Button -->
+    <button class="scroll-top" id="scrollTop">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Sample novel data
+        const sampleNovels = [
+            { title: "The Midnight Library", author: "Matt Haig", rating: 4.8, chapters: 324, genre: "Fantasy" },
+            { title: "Sang Pemimpi", author: "Andrea Hirata", rating: 4.7, chapters: 256, genre: "Drama" },
+            { title: "Dilan 1990", author: "Pidi Baiq", rating: 4.9, chapters: 189, genre: "Romance" },
+            { title: "Laskar Pelangi", author: "Andrea Hirata", rating: 4.8, chapters: 312, genre: "Drama" },
+            { title: "Ayat-Ayat Cinta", author: "Habiburrahman El Shirazy", rating: 4.6, chapters: 278, genre: "Romance" },
+            { title: "Bumi Manusia", author: "Pramoedya Ananta Toer", rating: 4.9, chapters: 445, genre: "Drama" },
+            { title: "Perahu Kertas", author: "Dee Lestari", rating: 4.5, chapters: 334, genre: "Romance" },
+            { title: "Negeri 5 Menara", author: "Ahmad Fuadi", rating: 4.7, chapters: 298, genre: "Drama" }
+        ];
+
+        // Function to create novel card
+        function createNovelCard(novel) {
+            return `
+                <div class="novel-card">
+                    <div class="novel-cover"></div>
+                    <div class="novel-info">
+                        <div class="novel-title">${novel.title}</div>
+                        <div class="novel-author">${novel.author}</div>
+                        <div class="novel-stats">
+                            <div class="novel-rating">
+                                <i class="fas fa-star rating-star"></i>
+                                <span>${novel.rating}</span>
+                            </div>
+                            <div class="novel-chapters">${novel.chapters} ch</div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        // Function to populate novel sections
+        function populateNovels() {
+            const popularSection = document.getElementById('popularNovels');
+            const newReleasesSection = document.getElementById('newReleases');
+            const trendingSection = document.getElementById('trendingNovels');
+
+            // Shuffle novels for different sections
+            const shuffledNovels1 = [...sampleNovels].sort(() => Math.random() - 0.5);
+            const shuffledNovels2 = [...sampleNovels].sort(() => Math.random() - 0.5);
+            const shuffledNovels3 = [...sampleNovels].sort(() => Math.random() - 0.5);
+
+            popularSection.innerHTML = shuffledNovels1.slice(0, 6).map(createNovelCard).join('');
+            newReleasesSection.innerHTML = shuffledNovels2.slice(0, 6).map(createNovelCard).join('');
+            trendingSection.innerHTML = shuffledNovels3.slice(0, 6).map(createNovelCard).join('');
+        }
+
+        // Search functionality
+        document.querySelector('.search-bar').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            // Add search logic here
+            console.log('Searching for:', searchTerm);
+        });
+
+        // Genre tag functionality
+        document.querySelectorAll('.genre-tag').forEach(tag => {
+            tag.addEventListener('click', function() {
+                document.querySelectorAll('.genre-tag').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                console.log('Selected genre:', this.textContent);
+            });
+        });
+
+        // Mobile navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+
+        // Scroll to top functionality
+        const scrollTopBtn = document.getElementById('scrollTop');
+        
+        window.addEventListener('scroll', function() {
+            if (window.pageYOffset > 300) {
+                scrollTopBtn.classList.add('show');
+            } else {
+                scrollTopBtn.classList.remove('show');
+            }
+        });
+
+        scrollTopBtn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Novel card click functionality
+        document.addEventListener('click', function(e) {
+            const novelCard = e.target.closest('.novel-card');
+            if (novelCard) {
+                const title = novelCard.querySelector('.novel-title').textContent;
+                console.log('Opening novel:', title);
+                // Add navigation to novel detail page
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateNovels();
+        });
+
+        // Add loading animation for search
+        document.querySelector('.search-btn').addEventListener('click', function() {
+            const originalContent = this.innerHTML;
+            this.innerHTML = '<div class="loading"></div>';
+            
+            setTimeout(() => {
+                this.innerHTML = originalContent;
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
